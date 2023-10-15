@@ -1,5 +1,3 @@
-// WeekSlider.js
-
 import React, { useState } from 'react';
 import ReactSlider from 'react-slider';
 import './styles.css'; 
@@ -7,7 +5,7 @@ import './styles.css';
 const WeekSlider = ({ week, initialValues }) => {
   const [values, setValues] = useState(initialValues);
 
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
   const handleValuesChange = (newValues) => {
     setValues(newValues);
