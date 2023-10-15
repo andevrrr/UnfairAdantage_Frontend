@@ -1,0 +1,73 @@
+.container {
+    margin: 10%;
+  }
+  
+  .week-slider-container {
+    text-align: center;
+    margin-top: 50px;
+  }
+  
+  .horizontal-slider {
+    width: 100%;
+    margin: 20px auto;
+  }
+  
+  .example-thumb {
+    height: 15px;
+    width: 15px;
+    background-color: #007BFF;
+    border-radius: 50%;
+    cursor: grab;
+    position: relative;
+    z-index: 1; 
+  }
+  
+  .example-thumb::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: #007BFF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .example-track {
+    height: 5px;
+    background-color: #ddd;
+    margin-top: -2.5px;
+  }
+  
+  .days-of-week {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+  }
+  
+  .days {
+    top: 20px;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .day-label {
+    flex: 1;
+    position: relative;
+  }
+  
+  .day-label.selected::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 10px);
+    height: 5px;
+    background-color: #007BFF;
+    transform: translate(-50%, -50%);
+    z-index: 0; 
+  }
+  
+  
