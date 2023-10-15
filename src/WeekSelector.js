@@ -2,13 +2,17 @@ import React, { useState } from 'react';
 import ReactSlider from 'react-slider';
 import './styles.css'; 
 
-const WeekSlider = ({ week, initialValues }) => {
+const WeekSlider = ({ week, initialValues, onValuesChange }) => {
   const [values, setValues] = useState(initialValues);
 
   const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
+
+  
   const handleValuesChange = (newValues) => {
     setValues(newValues);
+    
+    onValuesChange(newValues);
   };
 
   const isDayInInterval = (dayIndex) => {
