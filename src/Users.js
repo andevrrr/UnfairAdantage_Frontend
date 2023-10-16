@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import WeekSlider from './WeekSelector';
+import WeekSlider from './WeekSelector'; 
 
 const UsersAvailabilities = () => {
   const [userAvailabilities, setUserAvailabilities] = useState([]);
 
-  
-
   useEffect(() => {
     const fetchUserAvailabilities = async () => {
       try {
-        const usernames = ['user1'];
+        const usernames = ['user1']; 
         const availabilityPromises = usernames.map(async (username) => {
           const response = await axios.get(`http://localhost:3000/users/${username}/availability`);
           return { username, availability: response.data.availability };
@@ -28,14 +26,11 @@ const UsersAvailabilities = () => {
 
   const handleSaveChanges = async () => {
     try {
-
       const updates = userAvailabilities[0].availability;
-
 
       console.log(updates);
 
       const response = await axios.post('http://localhost:3000/users/user1/availability', { updates });
-
       console.log(response.data);
     } catch (error) {
       console.error('Error saving changes:', error);
@@ -55,13 +50,14 @@ const UsersAvailabilities = () => {
     return [];
   };
   
+  
 
   const handleValuesChange = (weekIndex, newValues) => {
     console.log(weekIndex);
     console.log(newValues);
     setUserAvailabilities((prevAvailabilities) => {
       const newAvailabilities = [...prevAvailabilities];
-      newAvailabilities[0].availability[weekIndex].availableDays = calculateAvailableDays(newValues);
+      newAvailabilities[0].availability[weekIndex].intervals[0].availableDays = calculateAvailableDays(newValues);
       console.log(newAvailabilities);
       return newAvailabilities;
     });
@@ -74,7 +70,7 @@ const UsersAvailabilities = () => {
           <WeekSlider
             key={`${userIndex}-${weekIndex}`}
             week={weekIndex + 1}
-            initialValues={calculateInitialValues(week)}
+            initialValues={calculateInitialValues(week.intervals[0].availableDays)} 
             onValuesChange={(newValues) => handleValuesChange(weekIndex, newValues)}
           />
         ))
@@ -84,21 +80,18 @@ const UsersAvailabilities = () => {
   );
 };
 
-const calculateInitialValues = (availability) => {
-    const initialValues = [0, 5]; 
-    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  
+const calculateInitialValues = (availableDays) => {
+  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+  const initialValues = [0, 5];
 
-      if (availability.availableDays.length > 0) {
-        const startDayIndex = daysOfWeek.indexOf(availability.availableDays[0].day);
-        const endDayIndex = daysOfWeek.indexOf(availability.availableDays[availability.availableDays.length - 1].day);
+  if (availableDays.length > 0) {
+    const startDayIndex = daysOfWeek.indexOf(availableDays[0].day);
+    const endDayIndex = daysOfWeek.indexOf(availableDays[availableDays.length - 1].day);
 
-        initialValues[0] = startDayIndex;
-        initialValues[1] = endDayIndex;
-      }
-      
-    
-    return initialValues;
-  };
+    initialValues[0] = startDayIndex;
+    initialValues[1] = endDayIndex;
+  }
+  return initialValues;
+};
 
 export default UsersAvailabilities;

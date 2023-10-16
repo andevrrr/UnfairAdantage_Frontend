@@ -1,12 +1,10 @@
-// WeekSlider.js
-
 import React, { useState, useEffect } from "react";
 import ReactSlider from "react-slider";
 import "./styles.css";
 
 const WeekSlider = ({ week, initialValues, onValuesChange }) => {
   const [values, setValues] = useState(initialValues);
-  const [prevValues, prevSetValues] = useState(values);
+  const [prevValues, setPrevValues] = useState(values);
   const [newInterval, setNewInterval] = useState(null);
   const [isFullyAvailable, setIsFullyAvailable] = useState(false);
 
@@ -24,7 +22,7 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
     const [newStart, newEnd] = newValues;
 
     if (newInterval) {
-      if (newInterval[1] == newStart && newInterval[0] <= newEnd) {
+      if (newInterval[1] === newStart && newInterval[0] <= newEnd) {
         // const offset = newStart - newInterval[1] - 1;
 
         let left = newInterval[0] - 1;
@@ -37,7 +35,7 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
         setNewInterval([left, right]);
       }
     }
-    prevSetValues(newValues);
+    setPrevValues(newValues);
     onValuesChange(newValues);
     setValues(newValues);
   };
@@ -45,8 +43,9 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
   const handleToggleInterval = () => {
     if (!newInterval) {
       let right = 1;
-      if (values[0] == right) {
+      if (values[0] === right) {
         setValues[0] += 1;
+        //setValues(prevValues => [prevValues[0] + 1, prevValues[1]]);
       }
       setNewInterval([0, right]);
     } else {
@@ -57,7 +56,7 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
   const handleNewIntervalChange = (newValues) => {
     const [newStart, newEnd] = newValues;
 
-    if (values[0] == newEnd && values[1] >= newStart) {
+    if (values[0] === newEnd && values[1] >= newStart) {
       const offset = newEnd - values[0] + 1;
 
       let right = values[1] + offset;
@@ -147,7 +146,7 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
         </div>
       </div>
       <div>
-        <button  className="sideButtons" onClick={handleToggleInterval}>
+        <button className="sideButtons" onClick={handleToggleInterval}>
           {newInterval ? "-" : "+"}
         </button>
       </div>
