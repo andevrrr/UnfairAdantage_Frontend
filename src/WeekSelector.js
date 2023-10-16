@@ -2,10 +2,17 @@ import React, { useState, useEffect } from "react";
 import ReactSlider from "react-slider";
 import "./styles.css";
 
-const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onValuesChange1 }) => {
+const WeekSlider = ({
+  week,
+  initialValues0,
+  onValuesChange0,
+  initialValues1,
+  onValuesChange1,
+}) => {
   const [values, setValues] = useState(initialValues0);
   const [prevValues, setPrevValues] = useState(values);
   const [newInterval, setNewInterval] = useState(initialValues1);
+  const [prevNewInterval, setPrevNewInterval] = useState(initialValues1);
   const [isFullyAvailable, setIsFullyAvailable] = useState(false);
 
   const daysOfWeek = [
@@ -34,6 +41,7 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
 
         setNewInterval([left, right]);
         onValuesChange1([left, right]);
+        setPrevNewInterval([left, right]);
       }
     }
     setPrevValues(newValues);
@@ -41,17 +49,19 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
     setValues(newValues);
   };
 
-  const handleToggleInterval = () => {
+  const handleToggleInterval = async () => {
     if (!newInterval) {
       let right = 1;
-      if (values[0] === right) {
-        setValues[0] += 1;
-        //setValues(prevValues => [prevValues[0] + 1, prevValues[1]]);
-      }
+      if (values[0] === 0 || values[0] === 1) {
+        await setValues([2, values[1]]);
+        await onValuesChange0([2, values[1]])
+      } 
       onValuesChange1([0, right]);
       setNewInterval([0, right]);
+      setPrevNewInterval([0, right]);
     } else {
       setNewInterval(null);
+      onValuesChange1(null);
     }
   };
 
@@ -76,8 +86,8 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
 
   const handleToggleIntervalFullyAvailable = () => {
     if (isFullyAvailable) {
-      setNewInterval(null);
-
+      setNewInterval(prevNewInterval);
+      onValuesChange1(prevNewInterval);
       setValues(prevValues);
       onValuesChange0(prevValues);
     } else {
@@ -92,21 +102,22 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
   return (
     <div className="container">
       <div>
-          <input
-            type="checkbox"
-            id="fullyAvailableCheckbox"
-            checked={isFullyAvailable}
-            onChange={handleToggleIntervalFullyAvailable}
-          />
-          <label htmlFor="fullyAvailableCheckbox">Fully Available</label>
-        </div>
+        <input
+          type="checkbox"
+          id="fullyAvailableCheckbox"
+          checked={isFullyAvailable}
+          onChange={handleToggleIntervalFullyAvailable}
+        />
+        <label htmlFor="fullyAvailableCheckbox">Fully Available</label>
+      </div>
       <div className="week-slider-container">
         <h2>Week {week}</h2>
         <ReactSlider
+          key={JSON.stringify(values)} 
+          defaultValue={values}
           className="horizontal-slider"
           thumbClassName="example-thumb"
           trackClassName="example-track"
-          defaultValue={values}
           ariaValuetext={(state) => `Thumb value ${daysOfWeek[state.valueNow]}`}
           pearling
           minDistance={1}
@@ -116,6 +127,7 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
         ></ReactSlider>
         {newInterval && (
           <ReactSlider
+            key={JSON.stringify(newInterval)} 
             className="horizontal-slider"
             thumbClassName="example-thumb2"
             trackClassName="example-track"
@@ -130,6 +142,7 @@ const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onV
             onChange={handleNewIntervalChange}
           ></ReactSlider>
         )}
+
         <div className="days-of-week">
           {daysOfWeek.map((day, index) => (
             <div
