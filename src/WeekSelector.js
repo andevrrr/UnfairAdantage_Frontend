@@ -2,10 +2,10 @@ import React, { useState, useEffect } from "react";
 import ReactSlider from "react-slider";
 import "./styles.css";
 
-const WeekSlider = ({ week, initialValues, onValuesChange }) => {
-  const [values, setValues] = useState(initialValues);
+const WeekSlider = ({ week, initialValues0, onValuesChange0, initialValues1, onValuesChange1 }) => {
+  const [values, setValues] = useState(initialValues0);
   const [prevValues, setPrevValues] = useState(values);
-  const [newInterval, setNewInterval] = useState(null);
+  const [newInterval, setNewInterval] = useState(initialValues1);
   const [isFullyAvailable, setIsFullyAvailable] = useState(false);
 
   const daysOfWeek = [
@@ -33,10 +33,11 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
         }
 
         setNewInterval([left, right]);
+        onValuesChange1([left, right]);
       }
     }
     setPrevValues(newValues);
-    onValuesChange(newValues);
+    onValuesChange0(newValues);
     setValues(newValues);
   };
 
@@ -47,6 +48,7 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
         setValues[0] += 1;
         //setValues(prevValues => [prevValues[0] + 1, prevValues[1]]);
       }
+      onValuesChange1([0, right]);
       setNewInterval([0, right]);
     } else {
       setNewInterval(null);
@@ -64,10 +66,11 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
         right = 6;
       }
 
-      onValuesChange([values[0] + offset, right]);
+      onValuesChange0([values[0] + offset, right]);
       setValues([values[0] + offset, right]);
     }
 
+    onValuesChange1(newValues);
     setNewInterval(newValues);
   };
 
@@ -76,11 +79,12 @@ const WeekSlider = ({ week, initialValues, onValuesChange }) => {
       setNewInterval(null);
 
       setValues(prevValues);
-      onValuesChange(prevValues);
+      onValuesChange0(prevValues);
     } else {
       setNewInterval(null);
+      onValuesChange1(null);
       setValues([0, 6]);
-      onValuesChange([0, 6]);
+      onValuesChange0([0, 6]);
     }
     setIsFullyAvailable(!isFullyAvailable);
   };

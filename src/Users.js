@@ -52,16 +52,31 @@ const UsersAvailabilities = () => {
   
   
 
-  const handleValuesChange = (weekIndex, newValues) => {
-    console.log(weekIndex);
-    console.log(newValues);
+  const handleValuesChange = async (weekIndex, newValues, week) => {
+    if (newValues === null) {
+      try {
+        const updatedAvailabilities = [...userAvailabilities];
+        const intervalToDelete = updatedAvailabilities[0].availability[weekIndex].intervals[week];
+  
+        await axios.delete(`http://localhost:3000/user1/delete-interval/${intervalToDelete._id}`);
+  
+        updatedAvailabilities[0].availability[weekIndex].intervals.splice(week, 1);
+  
+        setUserAvailabilities(updatedAvailabilities);
+      } catch (error) {
+        console.error('Error deleting interval:', error);
+      }
+  
+      return null;
+    }
+
     setUserAvailabilities((prevAvailabilities) => {
       const newAvailabilities = [...prevAvailabilities];
-      newAvailabilities[0].availability[weekIndex].intervals[0].availableDays = calculateAvailableDays(newValues);
-      console.log(newAvailabilities);
+      newAvailabilities[0].availability[weekIndex].intervals[week].availableDays = calculateAvailableDays(newValues);
       return newAvailabilities;
     });
   };
+  
 
   return (
     <>
@@ -70,8 +85,12 @@ const UsersAvailabilities = () => {
           <WeekSlider
             key={`${userIndex}-${weekIndex}`}
             week={weekIndex + 1}
-            initialValues={calculateInitialValues(week.intervals[0].availableDays)} 
-            onValuesChange={(newValues) => handleValuesChange(weekIndex, newValues)}
+            initialValues0={calculateInitialValues(week, 0)} 
+            onValuesChange0={(newValues) => handleValuesChange(weekIndex, newValues, 0)}
+            {...(week.intervals.length > 1 && {
+              initialValues1: calculateInitialValues(week, 1),
+              onValuesChange1: (newValues) => handleValuesChange(weekIndex, newValues, 1),
+            })}
           />
         ))
       ))}
@@ -80,18 +99,27 @@ const UsersAvailabilities = () => {
   );
 };
 
-const calculateInitialValues = (availableDays) => {
-  const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  const initialValues = [0, 5];
+const calculateInitialValues = (week, number) => {
+  
+    if (number === 1 && week.length === 1) {
+      return null; // No second interval in the week
+    }
+  
+    const availableDays = week.intervals[number].availableDays;
+    const daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    const initialValues = [0, 5];
+  
+    if (availableDays && availableDays.length > 0) {
+      const startDayIndex = daysOfWeek.indexOf(availableDays[0].day);
+      const endDayIndex = daysOfWeek.indexOf(availableDays[availableDays.length - 1].day);
+  
+      initialValues[0] = startDayIndex;
+      initialValues[1] = endDayIndex;
+    }
+  
+    return initialValues;
+  };
+  
+  export default UsersAvailabilities;
+  
 
-  if (availableDays.length > 0) {
-    const startDayIndex = daysOfWeek.indexOf(availableDays[0].day);
-    const endDayIndex = daysOfWeek.indexOf(availableDays[availableDays.length - 1].day);
-
-    initialValues[0] = startDayIndex;
-    initialValues[1] = endDayIndex;
-  }
-  return initialValues;
-};
-
-export default UsersAvailabilities;
