@@ -9,7 +9,7 @@ const UsersAvailabilities = (user) => {
     const fetchUserAvailabilities = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/users/${user.user}/availability`
+          `https://availability-schedule-22d342bff2a7.herokuapp.com/users/${user.user}/availability`
         );
         const availabilities = [
           { username: user.user, availability: response.data.availability },
@@ -30,7 +30,7 @@ const UsersAvailabilities = (user) => {
       console.log(updates);
 
       const response = await axios.post(
-        `http://localhost:3000/users/${user.user}/availability`,
+        `https://availability-schedule-22d342bff2a7.herokuapp.com/users/${user.user}/availability`,
         { updates }
       );
       console.log(response.data);

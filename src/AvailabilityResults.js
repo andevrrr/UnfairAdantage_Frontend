@@ -9,7 +9,7 @@ const AvailabilityResults = () => {
 
   useEffect(() => {
     axios
-      .get("http://localhost:3000/users/user1/availability")
+      .get("https://availability-schedule-22d342bff2a7.herokuapp.com/users/user1/availability")
       .then((response) => {
         setUser1Availability(response.data.availability);
       })
@@ -18,7 +18,7 @@ const AvailabilityResults = () => {
       });
 
     axios
-      .get("http://localhost:3000/users/user2/availability")
+      .get("https://availability-schedule-22d342bff2a7.herokuapp.com/users/user2/availability")
       .then((response) => {
         setUser2Availability(response.data.availability);
       })
