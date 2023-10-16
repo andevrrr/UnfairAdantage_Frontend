@@ -1,10 +1,11 @@
 .container {
     margin: 10%;
+    display: flex;
   }
   
   .week-slider-container {
+    width: 100%;
     text-align: center;
-    margin-top: 50px;
   }
   
   .horizontal-slider {
@@ -15,6 +16,7 @@
   .example-thumb {
     height: 15px;
     width: 15px;
+    margin-top: -7px;
     background-color: #007BFF;
     border-radius: 50%;
     cursor: grab;
@@ -30,6 +32,29 @@
     width: 5px;
     height: 5px;
     background-color: #007BFF;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .example-thumb2 {
+    height: 15px;
+    width: 15px;
+    margin-top: -7px;
+    background-color: #FF0000;
+    border-radius: 50%;
+    cursor: grab;
+    position: relative;
+    z-index: 1; 
+  }
+  
+  .example-thumb2::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 5px;
+    height: 5px;
+    background-color: #FF0000;
     border-radius: 50%;
     transform: translate(-50%, -50%);
   }
@@ -69,5 +94,26 @@
     transform: translate(-50%, -50%);
     z-index: 0; 
   }
-  
-  
+
+  .day-label.selected-second::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: calc(100% + 10px);
+    height: 5px;
+    background-color: #FF0000; 
+    transform: translate(-50%, -50%);
+    z-index: 0; 
+  }
+
+.sideButtons {
+    background-color: #007BFF; 
+  border: none;
+  color: rgb(255, 255, 255);
+  padding: 5px 14px;
+  text-align: center;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 20px;
+}
