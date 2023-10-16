@@ -1,11 +1,11 @@
+import React from 'react';
 import './App.css';
-import WeekSlider from './WeekSelector';
-import UsersAvailabilities from './Users';
+import Tabs from './Tabs';
 
 function App() {
   return (
     <>
-    <UsersAvailabilities />
+      <Tabs />
     </>
   );
 }
